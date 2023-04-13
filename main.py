@@ -18,6 +18,8 @@
 11.運行 tkinter GUI 的主循環。
 '''
 
+#本程式作者 ID:超級河馬 留言:測試是否有讀取到此訊息
+
 # region 1. 導入所需的庫
 import ctypes
 ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
@@ -58,45 +60,6 @@ def random_move_and_click(running_state, x_var, y_var, s_var):
 
 
 # region 3.0.2 測試功能
-def on_select_area_click():
-    def on_start_select(event):
-        canvas.data["start"] = (event.x, event.y)
-
-    def on_end_select(event):
-        x1, y1 = canvas.data["start"]
-        x2, y2 = event.x, event.y
-        canvas.data["rect_coords"] = (x1, y1, x2, y2)
-        draw_rectangle_on_screen(x1, y1, x2, y2)
-        top.destroy()
-
-    def draw_rectangle_on_screen(x1, y1, x2, y2):
-        # Get a screenshot
-        screenshot = ImageGrab.grab()
-        draw = ImageDraw.Draw(screenshot)
-
-        # Draw a semi-transparent rectangle
-        draw.rectangle([x1, y1, x2, y2], fill=(255, 0, 0, 64))
-
-        # Save the screenshot with the rectangle
-        screenshot.save("selected_area.png")
-
-    top = Toplevel(root)
-    top.attributes("-fullscreen", True)
-    top.bind("<Button-1>", on_start_select)
-    top.bind("<ButtonRelease-1>", on_end_select)
-
-    # Create a Canvas and display the screen capture
-    screen_w, screen_h = top.winfo_screenwidth(), top.winfo_screenheight()
-    screenshot = ImageGrab.grab()
-    canvas = Canvas(top, width=screen_w, height=screen_h)
-    canvas.pack(fill=BOTH, expand=YES)
-
-    # Save the screenshot as a PhotoImage
-    photo = ImageTk.PhotoImage(screenshot)
-    canvas.create_image(0, 0, anchor=NW, image=photo)
-    canvas.data = {"photo": photo}
-
-    top.mainloop()
 
 #endregion
 
@@ -229,12 +192,12 @@ default_stop_hotkey = "f12"
 def start_program():
     running_state.set(True)
     update_status_label(status_label, "程式執行中...")
-    root.title("滑鼠控制程式 - 程式執行中...")
+    root.title("程式執行中...滑鼠控制程式 - ")
 
 def stop_program():
     running_state.set(False)
     update_status_label(status_label, "程式已暫停")
-    root.title("滑鼠控制程式 - 程式已暫停...")
+    root.title("程式已暫停...滑鼠控制程式 - ")
 
 keyboard.add_hotkey(default_start_hotkey, start_program)
 keyboard.add_hotkey(default_stop_hotkey, stop_program)
