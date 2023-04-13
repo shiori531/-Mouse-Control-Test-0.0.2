@@ -18,7 +18,7 @@
 11.運行 tkinter GUI 的主循環。
 '''
 
-#本程式作者 ID:超級河馬 留言:測試是否有讀取到此訊息
+#本程式作者 ID:超級河馬 留言:版本 0.0.4
 
 # region 1. 導入所需的庫
 import ctypes
@@ -34,6 +34,16 @@ from tkinter import messagebox
 from threading import Thread
 from PIL import ImageGrab
 from PIL import Image, ImageTk, ImageDraw
+
+import keyboard
+
+import numpy as np
+
+import os
+import platform
+import keyboard
+import time
+
 # endregion
 
 
@@ -59,9 +69,6 @@ def random_move_and_click(running_state, x_var, y_var, s_var):
 # endregion
 
 
-# region 3.0.2 測試功能
-
-#endregion
 
 
 # region 3. 定義其他輔助函數
@@ -180,24 +187,61 @@ clear_button.grid(row=8, column=2, padx=10, pady=10)
 
 #endregion
 
+# region 3.0.2 測試功能
+
+#endregion
+
 
 
 
 # region 4. 創建 tkinter GUI 和主循環
 
+import tkinter as tk
+from tkinter import ttk, messagebox
+import keyboard
+import os
+import platform
+
 # 預設熱鍵
 default_start_hotkey = "f10"
 default_stop_hotkey = "f12"
+
+def play_beep(sound_type):
+    current_platform = platform.system()
+
+    if current_platform == "Windows":
+        if sound_type == "start":
+            sound_file = "C:\\Windows\\Media\\Windows Ding.wav"
+        elif sound_type == "stop":
+            sound_file = "C:\\Windows\\Media\\chimes.wav"
+        os.system(f"powershell -c (New-Object Media.SoundPlayer '{sound_file}').PlaySync();")
+    elif current_platform == "Darwin":  # macOS
+        if sound_type == "start":
+            sound_file = "/System/Library/Sounds/Submarine.aiff"
+        elif sound_type == "stop":
+            sound_file = "/System/Library/Sounds/Funk.aiff"
+        os.system(f"afplay {sound_file}")
+    elif current_platform == "Linux":
+        if sound_type == "start":
+            sound_file = "/usr/share/sounds/sound-icons/trumpet-1.wav"
+        elif sound_type == "stop":
+            sound_file = "/usr/share/sounds/sound-icons/drumming.wav"
+        os.system(f"aplay {sound_file}")
+    else:
+        print("Unsupported platform")
 
 def start_program():
     running_state.set(True)
     update_status_label(status_label, "程式執行中...")
     root.title("程式執行中...滑鼠控制程式 - ")
+    play_beep("start")
 
 def stop_program():
     running_state.set(False)
     update_status_label(status_label, "程式已暫停")
     root.title("程式已暫停...滑鼠控制程式 - ")
+    play_beep("stop")
+
 
 keyboard.add_hotkey(default_start_hotkey, start_program)
 keyboard.add_hotkey(default_stop_hotkey, stop_program)
@@ -224,8 +268,6 @@ def update_hotkeys():
     keyboard.add_hotkey(start_hotkey.get(), start_program)
     keyboard.add_hotkey(stop_hotkey.get(), stop_program)
 
-
-
 # 添加一个按钮来更新热键
 update_hotkeys_button = ttk.Button(root, text="更新熱鍵", command=update_hotkeys)
 update_hotkeys_button.grid(row=6, column=0, columnspan=2, pady=10)
@@ -234,7 +276,5 @@ quit_button = ttk.Button(root, text="退出", command=exit_app)
 quit_button.grid(row=7, column=0, columnspan=2, pady=10)
 
 root.mainloop()
-
-
 
 # endregion
